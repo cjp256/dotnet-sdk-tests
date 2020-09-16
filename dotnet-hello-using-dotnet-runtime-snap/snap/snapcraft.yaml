@@ -1,4 +1,4 @@
-name: dotnet-hello
+name: dotnet-hello-using-dotnet-runtime-snap
 base: core20
 version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: This is a sample .NET application.
@@ -15,7 +15,7 @@ parts:
     plugin: nil
     override-build: |
       dotnet="/snap/bin/dotnet-sdk-31-2004.dotnet"
-      $dotnet publish --self-contained -r linux-x64 -c Release -o "${SNAPCRAFT_PART_INSTALL}"
+      $dotnet publish --no-self-contained --runtime linux-x64 --configuration Release --output ${SNAPCRAFT_PART_INSTALL}
     stage-packages:
       - libicu66
       - libssl1.1
@@ -33,7 +33,12 @@ apps:
   dotnet-hello:
     command: dotnet-hello
     environment:
-      DOTNET_ROOT: $SNAP  # Not required?
-      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET
+      DOTNET_ROOT: $SNAP/dotnet-runtime-31-2004
     plugs:
       - process-control
+
+plugs:
+  dotnet-runtime-31-2004:
+    interface: content
+    target: $SNAP/dotnet-runtime-31-2004
+    default-provider: dotnet-runtime-31-2004

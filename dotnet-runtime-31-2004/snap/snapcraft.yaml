@@ -1,0 +1,46 @@
+name: dotnet-runtime-31-2004
+base: core20
+version: 3.1.8
+summary: Cross-Platform .NET Core Runtime. 
+description: |
+  .NET Core runtimes and libraries which are optimized for running .NET Core apps in production. See https://dot.net/core.
+  .NET Core is a general purpose development platform maintained by Microsoft. 
+
+grade: stable
+confinement: strict
+
+apps:
+  dotnet:
+    command: dotnet
+    plugs:
+      - network
+      - network-bind
+      - removable-media
+      - home
+
+slots:
+  dotnet-runtime:
+    content: dotnet-runtime-31-2004
+    interface: content
+    read: [/]
+
+parts:
+  dotnet-runtime:
+    plugin: dump
+    source:
+      - on amd64: https://download.visualstudio.microsoft.com/download/pr/e4e47a0a-132e-416a-b8eb-f3373ad189d9/43af4412e27696c3c16e50f496f6c7af/dotnet-runtime-3.1.8-linux-x64.tar.gz
+      - on arm64: https://download.visualstudio.microsoft.com/download/pr/aa592fad-b5ef-428e-89b4-7a38cdabb787/1f97cb89b880e222fad432ffefe4a36c/dotnet-runtime-3.1.8-linux-arm64.tar.gz
+      - on armhf: https://download.visualstudio.microsoft.com/download/pr/3f331a87-d2e9-46c1-b7ef-369f8540e966/2e534214982575ee3c79a9ce9f9a4483/dotnet-runtime-3.1.8-linux-arm.tar.gz
+
+    stage-packages:
+      - libicu66
+      - libssl1.1
+      - libcurl4
+      - libgssapi-krb5-2
+      - liblttng-ust0
+      - libstdc++6
+      - zlib1g
+      - libgcc1
+      - libtinfo5
+      - libdb5.3
+      - libc6

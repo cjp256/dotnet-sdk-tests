@@ -1,8 +1,5 @@
 #!/bin/bash -ex
 
-sdk_snap=$1
-DOTNET_SDK_SNAP=${sdk_snap:=dotnet-sdk_3.1.402_amd64.snap}
-
 FEDORA32_INSTANCE=${FEDORA32_INSTANCE:=test-f32}
 UBUNTU1604_INSTANCE=${UBUNTU1604_INSTANCE:=test-ubu1604}
 UBUNTU1804_INSTANCE=${UBUNTU1804_INSTANCE:=test-ubu1804}
@@ -49,10 +46,10 @@ function run_tests() {
     lxc_exec ${instance} snap install snapcraft --classic
     lxc_exec ${instance} rm -rf /tmp/tests
     lxc_exec ${instance} mkdir /tmp/tests
-    lxc file push ${DOTNET_SDK_SNAP} ${instance}/tmp/tests/
-    lxc file push run-dotnet-sdk-tests.sh ${instance}/tmp/tests/
-    lxc_exec ${instance} snap install /tmp/tests/$(basename ${DOTNET_SDK_SNAP}) --dangerous --classic
+    lxc file push -r * ${instance}/tmp/tests/
+    lxc_exec ${instance} /tmp/tests/install-snaps.sh
     lxc_exec ${instance} /tmp/tests/run-dotnet-sdk-tests.sh
+    lxc_exec ${instance} /tmp/tests/run-dotnet-snap-tests.sh
     delete_instance ${instance}
 }
 

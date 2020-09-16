@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 
-dotnet="/snap/bin/dotnet-sdk.dotnet"
+dotnet="/snap/bin/dotnet-sdk-31-2004.dotnet"
 rm -rf apptest
 
 # Create .NET sample project "apptest".
@@ -16,9 +16,10 @@ $dotnet run --project apptest
 $dotnet ./apptest/bin/Debug/netcoreapp3.1/apptest.dll
 
 # Run project using built binary.  Requires:
-# (1) DOTNET_ROOT for 'Process terminated. Couldn't find a valid ICU package installed on the system. Set the configuration flag System.Globalization.Invariant to true if you want to run with no globalization support.'
-# (2) LD_LIBRARY_PATH for 'A fatal error occurred. The required library libhostfxr.so could not be found.'
-LD_LIBRARY_PATH=/snap/dotnet-sdk/current/usr/lib/x86_64-linux-gnu DOTNET_ROOT=/snap/dotnet-sdk/current ./apptest/bin/Debug/netcoreapp3.1/apptest
+# (1) LD_LIBRARY_PATH for 'Process terminated. Couldn't find a valid ICU package installed on the system. Set the configuration flag System.Globalization.Invariant to true if you want to run with no globalization support.'
+# (2) DOTNET_ROOT for 'A fatal error occurred. The required library libhostfxr.so could not be found.'
+DOTNET_ROOT=/snap/dotnet-sdk-31-2004/current ./apptest/bin/Debug/netcoreapp3.1/apptest
+LD_LIBRARY_PATH=/snap/dotnet-sdk-31-2004/current/usr/lib/x86_64-linux-gnu DOTNET_ROOT=/snap/dotnet-sdk-31-2004/current ./apptest/bin/Debug/netcoreapp3.1/apptest
 
 # Publish self-contained build.
 $dotnet publish apptest  --self-contained -r linux-x64

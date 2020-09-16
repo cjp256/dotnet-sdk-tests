@@ -1,0 +1,77 @@
+name: dotnet-sdk-31-2004
+version: 3.1.402
+summary: Cross-Platform .NET Core SDK
+description: |
+  .NET Core SDK. https://dot.net/core.
+
+grade: stable
+confinement: classic
+base: core20
+
+apps:
+  dotnet:
+    command: dotnet
+    environment:
+      LD_LIBRARY_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$LD_LIBRARY_PATH # Required to find libicu in classic.
+
+parts:
+  dotnet-sdk:
+      plugin: dump
+      source:
+        - on amd64: https://download.visualstudio.microsoft.com/download/pr/f01e3d97-c1c3-4635-bc77-0c893be36820/6ec6acabc22468c6cc68b61625b14a7d/dotnet-sdk-3.1.402-linux-x64.tar.gz
+        - on arm64: https://download.visualstudio.microsoft.com/download/pr/186257d9-bca2-4dda-be74-006205965ec9/b2b63d45482701473d9731abc41ecc2a/dotnet-sdk-3.1.402-linux-arm64.tar.gz
+        - on armhf: https://download.visualstudio.microsoft.com/download/pr/8f0dffe3-18f0-4d32-beb0-dbcb9a0d91a1/abe9a34e3f8916478f0bd80402b01b38/dotnet-sdk-3.1.402-linux-arm.tar.gz
+
+      build-attributes: [no-patchelf]
+
+      stage-packages:
+        - libicu66
+        - libssl1.1
+        - libcurl4
+        - libgssapi-krb5-2
+        - libstdc++6
+        - zlib1g
+        - libgcc1
+        - libtinfo5
+        - liblttng-ust0
+        - liburcu6
+
+      override-prime: |
+        set -x
+        snapcraftctl prime
+
+        patchelf="/snap/snapcraft/current/bin/patchelf"
+        base="/snap/core20/current"
+
+        # Snapcraft sets RPATH for all classic executables using patchelf.
+        # With the no-patchelf attribute, we must do this ourselves for the
+        # executables that require it.
+        rpath='$ORIGIN/netcoredeps'
+        rpath="${rpath}:${base}/lib/$SNAPCRAFT_ARCH_TRIPLET"
+        rpath="${rpath}:${base}/usr/lib/$SNAPCRAFT_ARCH_TRIPLET"
+        rpath="${rpath}:/snap/dotnet-sdk/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET"
+
+        "${patchelf}" --force-rpath --set-rpath "${rpath}" "${SNAPCRAFT_PRIME}/dotnet"
+
+        # Snapcraft sets the interpreter to point to the one found in the base
+        # snap (core18). With the no-patchelf attribute, we must do this
+        # ourselves for the executables that require it.  Do this by querying
+        # the interpreter and prepending the base, if not already patched
+        # by a previous run.
+        interp="$("${patchelf}" --print-interpreter "${SNAPCRAFT_PRIME}/dotnet")"
+        if ! echo "${interp}" | grep -q "${base}"; then
+          interp="${base}${interp}"
+        fi
+
+        # Sanity check to make sure we are pointing to a valid interpreter.
+        if [ ! -f "${interp}" ]; then
+          echo "${interp} not found"
+          exit 1
+        fi
+
+        "${patchelf}" --set-interpreter "${interp}" "${SNAPCRAFT_PRIME}/dotnet"
+
+  runtime-wrapper:
+      plugin: dump
+      source: .
+
