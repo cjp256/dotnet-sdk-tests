@@ -15,10 +15,12 @@ $dotnet run --project apptest
 # Run project using built "dll" via `dotnet`.
 $dotnet ./apptest/bin/Debug/netcoreapp3.1/apptest.dll
 
-# Run project using built binary. Requires: (1) LD_LIBRARY_PATH for 'Process
-# terminated. Couldn't find a valid ICU package installed on the system. Set the
-# configuration flag System.Globalization.Invariant to true if you want to run
-# with no globalization support.' Happens on Fedora.
+# Run project using built binary. Requires:
+#
+#(1) LD_LIBRARY_PATH for 'Process terminated. Couldn't find a valid ICU package
+# installed on the system. Set the configuration flag
+# System.Globalization.Invariant to true if you want to run with no
+# globalization support.' Happens on Fedora.
 #
 #(2) DOTNET_ROOT for 'A fatal error occurred. The required library libhostfxr.so
 # could not be found.'
