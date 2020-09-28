@@ -1,4 +1,7 @@
 #!/bin/bash -xe
+#
+# Install built snaps, connecting required plugs.
+#
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 pushd $SCRIPT_DIR

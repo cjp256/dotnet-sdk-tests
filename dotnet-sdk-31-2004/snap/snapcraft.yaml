@@ -49,7 +49,7 @@ parts:
         rpath='$ORIGIN/netcoredeps'
         rpath="${rpath}:${base}/lib/$SNAPCRAFT_ARCH_TRIPLET"
         rpath="${rpath}:${base}/usr/lib/$SNAPCRAFT_ARCH_TRIPLET"
-        rpath="${rpath}:/snap/dotnet-sdk/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET"
+        rpath="${rpath}:/snap/dotnet-sdk-31-2004/current/usr/lib/$SNAPCRAFT_ARCH_TRIPLET"
 
         "${patchelf}" --force-rpath --set-rpath "${rpath}" "${SNAPCRAFT_PRIME}/dotnet"
 

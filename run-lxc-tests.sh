@@ -1,4 +1,13 @@
 #!/bin/bash -ex
+#
+# Runs a suite of tests against a variety of LXD instances, including:
+# - Ubuntu 16.04, 18.04, 20.04
+# - Fedora 32
+#
+# The tests include those found in:
+# - run-dotnet-sdk-tests.sh
+# - run-dotnet-snap-tests.sh
+
 
 FEDORA32_INSTANCE=${FEDORA32_INSTANCE:=test-f32}
 UBUNTU1604_INSTANCE=${UBUNTU1604_INSTANCE:=test-ubu1604}

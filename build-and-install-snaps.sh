@@ -1,4 +1,8 @@
 #!/bin/bash -xe
+#
+# Build dotnet runtime & sdk snaps, with some special handling to get
+# the updated SDK snap installed inside build environment.
+#
 
 pushd dotnet-runtime-31-2004
 snapcraft snap
